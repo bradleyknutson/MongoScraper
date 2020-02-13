@@ -1,21 +1,17 @@
 const mongoose = require(`mongoose`);
+const bcrypt = require(`bcryptjs`);
 
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    firstName: {
+    email: {
         type: String,
-        trim: true,
-        required: "First name is required"
+        required: true,
+        unique: true,
+        match: [/.+@.+\..+/, "Please enter a valid e-mail address"]
     },
 
-    lastName: {
-        type: String,
-        trim: true,
-        required: "Last Name is Required"
-      },
-    
-      password: {
+    password: {
         type: String,
         trim: true,
         required: "Password is Required",
@@ -25,36 +21,48 @@ const UserSchema = new Schema({
           },
           "Password needs to be longer."
         ]
-      },
-     
-      email: {
-        type: String,
-        unique: true,
-        match: [/.+@.+\..+/, "Please enter a valid e-mail address"]
-      },
-     
-      userCreated: {
+    },
+  
+    userCreated: {
         type: Date,
         default: Date.now
-      },
-  
-      lastUpdated: Date,
+    },
 
-      fullName: String
+    comments: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "Comment"
+        }
+    ],
+
+    lastUpdated: Date,
 
 });
 
-UserSchema.methods.setFullName = function() {
-    this.fullName = `${this.firstName} ${this.lastName}`;
-    return this.fullName;
-  }
-  
-  UserSchema.methods.lastUpdatedDate = function() {
+UserSchema.methods.lastUpdatedDate = function() {
     this.lastUpdated = Date.now();
     return this.lastUpdated;
-  }
+}
+
+UserSchema.pre(`save`, function(next) {
+    let user = this;
+    if(!user.isModified(`password`)) return next();
+
+    bcrypt.genSalt(12, (err, salt) => {
+        if(err) return next(err);
+        bcrypt.hash(user.password, salt, (err, hash) => {
+            if(err) return next(err);
+            user.password = hash;
+            next();
+        });
+    });
+});
+
+UserSchema.methods.comparePassword = function(enteredPassword) {
+    return bcrypt.compareSync(enteredPassword, this.password);
+};
  
-  var User = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
   
 
-  module.exports = User;
+module.exports = User;
