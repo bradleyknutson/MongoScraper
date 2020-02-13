@@ -3,6 +3,8 @@ const express = require(`express`);
 const exphbs = require(`express-handlebars`);
 const logger = require(`morgan`);
 const mongoose = require(`mongoose`);
+const passport = require(`passport`);
+const flash = require(`connect-flash`);
 
 
 // const db = require(`./models`);
@@ -15,7 +17,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(`public`));
 app.use(logger(`dev`));
-require(`./middleware/passport`);
+app.use(require(`express-session`)({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 // Routes
 const articleRouter = require(`./routes/article`);

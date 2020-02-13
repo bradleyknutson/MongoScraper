@@ -5,9 +5,21 @@ const router = express.Router();
 
 
 router.get(`/`, (req, res) => {
-    axios.get(`/articles/pull`)
+    axios.get(`http://localhost:${process.env.PORT || 3000}/articles/pull`)
         .then(response => {
-            res.render(`index`);
+            db.Article.find({})
+                .sort({
+                    dateAdded: -1
+                })
+                .lean()
+                .then((articles) => {
+                    res.render(`index`, {
+                        article: articles
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }).catch(err => {
             console.log(err);
         });
