@@ -1,10 +1,9 @@
-const express = require(`express`);
+const indexRouter = require(`express`).Router();
 const axios = require(`axios`);
 const db = require(`../models`);
-const router = express.Router();
 
 
-router.get(`/`, (req, res) => {
+indexRouter.get(`/`, (req, res) => {
     axios.get(`http://localhost:${process.env.PORT || 3000}/articles/pull`)
         .then(response => {
             db.Article.find({})
@@ -14,7 +13,8 @@ router.get(`/`, (req, res) => {
                 .lean()
                 .then((articles) => {
                     res.render(`index`, {
-                        article: articles
+                        article: articles,
+                        user: req.user || false
                     });
                 })
                 .catch(err => {
@@ -25,4 +25,4 @@ router.get(`/`, (req, res) => {
         });
 });
 
-module.exports = router;
+module.exports = indexRouter;

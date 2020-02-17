@@ -12,7 +12,7 @@ $(function () {
             $.post(`/auth/login`, userData).then((response) => {
                 $(`input[name="email"]`).val(``);
                 $(`input[name="password"]`).val(``);
-                window.location.replace(`/`);
+                window.location.replace(response);
             }).catch(err => {
                 console.log(err);
             });
@@ -32,11 +32,23 @@ $(function () {
             $.post(`/auth/signup`, userData).then((response) => {
                 $(`input[name="email"]`).val(``);
                 $(`input[name="password"]`).val(``);
-                window.location.replace(`/`);
+                window.location.replace(response);
             }).catch(err => {
                 console.log(err.responseJSON);
             });
         }
+    });
+
+    $(`#commentForm`).on(`submit`, function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: `POST`,
+            url: `/articles/${$(this).data(`articleid`)}/comment/create`,
+            data: {commentText: $(`#commentBox`).val().trim()},
+            success: function (response) {
+                window.location.replace(response);
+            }
+        });
     });
 
 });

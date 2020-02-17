@@ -24,13 +24,11 @@ app.use(flash());
 
 // Routes
 const articleRouter = require(`./routes/article`);
-const userRouter = require(`./routes/user`);
 const indexRouter = require(`./routes/index`);
-const auth = require(`./routes/auth`);
+const authRouter = require(`./routes/auth`);
 app.use(`/`, indexRouter);
-app.use(`/user`, passport.authenticate(`jwt`, {session: false}), userRouter);
 app.use(`/articles`, articleRouter);
-app.use(`/auth`, auth);
+app.use(`/auth`, authRouter);
 
 // Handlebars
 app.engine(`handlebars`, exphbs({defaultLayout: `main`}));
