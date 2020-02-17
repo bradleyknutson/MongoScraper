@@ -1,23 +1,22 @@
-const express = require(`express`);
-const router = express.Router();
+const authRouter = require(`express`).Router();
 const passport = require(`../middleware/passport`);
 const db = require(`../models`);
 
-router.post(`/login`, passport.authenticate(`local`, {
+authRouter.post(`/login`, passport.authenticate(`local`, {
     failureRedirect: `/auth/login`,
     failureFlash: `true`
 }), (req, res, next) => {
     res.json(`/`);
 });
 
-router.get(`/login`, (req, res, next) => {
+authRouter.get(`/login`, (req, res, next) => {
     if(req.user){
         res.redirect(`/`);
     }
-    res.render(`login`);
+    res.render(`login`, {error: req.flash(`error`)});
 });
 
-router.post(`/signup`, (req, res, next) => {
+authRouter.post(`/signup`, (req, res, next) => {
     db.User.create({
         email: req.body.email,
         password: req.body.password
@@ -29,11 +28,16 @@ router.post(`/signup`, (req, res, next) => {
     });
 });
 
-router.get(`/signup`, (req, res, next) => {
+authRouter.get(`/signup`, (req, res, next) => {
     if(req.user) {
         res.redirect(`/`);
     }
-    res.render(`signup`);
+    res.render(`signup`, {error: req.flash(`error`)});
+});
+
+authRouter.get(`/logout`, (req, res) => {
+    req.logout();
+    res.redirect(`/`);
 })
 
-module.exports = router;
+module.exports = authRouter;

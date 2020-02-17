@@ -45,22 +45,25 @@ UserSchema.methods.lastUpdatedDate = function() {
 }
 
 UserSchema.pre(`save`, function(next) {
-    let user = this;
-    if(!user.isModified(`password`)) return next();
+    if(!this.isModified(`password`)) return next();
 
     bcrypt.genSalt(12, (err, salt) => {
         if(err) return next(err);
-        bcrypt.hash(user.password, salt, (err, hash) => {
+        bcrypt.hash(this.password, salt, (err, hash) => {
             if(err) return next(err);
-            user.password = hash;
+            this.password = hash;
             next();
         });
     });
 });
 
-UserSchema.methods.comparePassword = function(enteredPassword) {
-    return bcrypt.compareSync(enteredPassword, this.password);
+UserSchema.methods.comparePassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
 };
+
+UserSchema.hashPassword = function(password){
+    return hashSync(password);
+}
  
 const User = mongoose.model("User", UserSchema);
   

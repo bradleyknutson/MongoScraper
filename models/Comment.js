@@ -11,9 +11,14 @@ const CommentSchema = new Schema({
         minlength: 5
     },
 
-    user: {
+    userId: {
         type: Schema.Types.ObjectId,
         ref: "User"
+    },
+
+    userEmail: {
+        type: String,
+        required: true
     },
 
     article: {
@@ -23,5 +28,5 @@ const CommentSchema = new Schema({
 
 });
 
-const Comment = mongoose.model(`Comment`, NoteSchema);
+const Comment = mongoose.model(`Comment`, CommentSchema);
 module.exports = Comment;

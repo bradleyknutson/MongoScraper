@@ -1,10 +1,10 @@
-const express = require(`express`);
+const articleRouter = require(`express`).Router();
 const axios = require(`axios`);
 const db = require(`../models`);
 const cheerio = require(`cheerio`);
-const router = express.Router();
+const commentRouter = require(`./note`);
 
-router.get(`/pull`, (req, res) => {
+articleRouter.get(`/pull`, (req, res) => {
     axios.get(`https://www.nytimes.com/`)
         .then(response => {
             let $ = cheerio.load(response.data);
@@ -42,13 +42,15 @@ router.get(`/pull`, (req, res) => {
         });
 });
 
-router.get(`/:id`, (req, res) => {
-    db.Article.findById(req.params.id)
+articleRouter.get(`/:articleid`, (req, res) => {
+    db.Article.findById(req.params.articleid)
         .lean()
+        .populate(`comments`)
         .then(article => {
             res.render(`article`, 
             {
-                article: article
+                article: article,
+                user: req.user
             })
         })
         .catch(err => {
@@ -56,4 +58,6 @@ router.get(`/:id`, (req, res) => {
         });
 });
 
-module.exports = router;
+articleRouter.use(`/:articleid/comment`, commentRouter);
+
+module.exports = articleRouter;
