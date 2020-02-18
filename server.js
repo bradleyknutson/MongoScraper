@@ -31,12 +31,14 @@ app.use(`/articles`, articleRouter);
 app.use(`/auth`, authRouter);
 
 // Handlebars
-app.engine(`handlebars`, exphbs({defaultLayout: `main`}));
+app.engine(`handlebars`, exphbs({defaultLayout: `main`, helpers: require(`handlebars-helpers`)()}));
 app.set(`view engine`, `handlebars`);
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
 }).then(() => {
     app.listen(PORT, () => {
         console.log(`Listening on http://localhost:${PORT}/`);

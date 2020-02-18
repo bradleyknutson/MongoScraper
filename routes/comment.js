@@ -4,7 +4,6 @@ const db = require(`../models`);
 commentRouter.post(`/create`, (req, res, next) => {
     db.Comment.create({...req.body, userId: req.user._id, userEmail: req.user.email, article: req.params.articleid})
         .then(comment => {
-            console.log(comment);
             db.User.findByIdAndUpdate(req.user._id, 
                 {
                     $push: {
@@ -28,6 +27,16 @@ commentRouter.post(`/create`, (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
+        });
+});
+
+commentRouter.delete(`/:id/delete`, (req, res, next) => {
+    db.Comment.findById(req.params.id)
+        .then((comment) => {
+            comment.deleteOne();
+            res.status(200).end();
+        }).catch(err => {
+            res.send(err);
         });
 });
 

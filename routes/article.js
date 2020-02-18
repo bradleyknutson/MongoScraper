@@ -2,7 +2,7 @@ const articleRouter = require(`express`).Router();
 const axios = require(`axios`);
 const db = require(`../models`);
 const cheerio = require(`cheerio`);
-const commentRouter = require(`./note`);
+const commentRouter = require(`./comment`);
 
 articleRouter.get(`/pull`, (req, res) => {
     axios.get(`https://www.nytimes.com/`)

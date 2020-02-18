@@ -1,7 +1,42 @@
+body {
+    background-color: #776978;
+    font-family: 'Asap', sans-serif;
+}
+
 .card {
     height: 100%;
 }
 
 .article {
     margin-bottom: .5em;
+}
+
+.navbar {
+    font-size: 2em;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+.navbar a:hover {
+    color: white;
+    border: none;
+}
+
+.navbar-brand, .nav-link {
+    color: white;
+}
+
+.card-title {
+    font-size: 1.5em;
+}
+
+#comments {
+    margin-bottom: 50px;
+}
+
+#commentForm {
+    margin-bottom: 50px;
 }

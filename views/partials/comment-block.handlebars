@@ -2,7 +2,7 @@
   <div class="card-body">
     <blockquote class="blockquote mb-0">
       <p>{{commentText}}</p>
-      <footer class="blockquote-footer">{{userEmail}}</footer>
+      <footer class="blockquote-footer">{{userEmail}}{{#eq userEmail user.email}}<button class="btn btn-sm btn-danger float-right deleteComment" data-commentid={{_id}}>Delete</button>{{/eq}}</footer>
     </blockquote>
   </div>
 </div>

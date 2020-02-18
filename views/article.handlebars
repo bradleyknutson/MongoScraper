@@ -35,8 +35,8 @@
             </div>
             <div class="col-md-1"></div>
         </div>
-        {{#each article.comments}}
-            {{> comment-block}}
+        {{#each article.comments }}
+            {{> comment-block user=../user}}
         {{/each}}
     </div>
 </div>

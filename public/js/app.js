@@ -51,4 +51,14 @@ $(function () {
         });
     });
 
+    $(`.deleteComment`).on(`click`, function(e){
+        $.ajax({
+            type: `DELETE`,
+            url: `${window.location.pathname}/comment/${$(this).data(`commentid`)}/delete`,
+            success: function (response) {
+                window.location.reload();
+            }
+        });
+    })
+
 });
